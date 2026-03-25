@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Identity OS — Runtime Behavioral Control for AI Agents</title>
+    <meta name="description" content="Stop AI agent jailbreaks at the execution layer. Identity OS enforces behavioral contracts in real-time. Works with LangGraph, CrewAI, OpenAI Agents SDK.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #111118;
+            --bg-card: #16161f;
+            --border: #2a2a3a;
+            --text-primary: #e8e8ef;
+            --text-secondary: #8888a0;
+            --text-muted: #5a5a70;
+            --accent: #b8b8d0;
+            --accent-bright: #d0d0e8;
+            --accent-glow: rgba(184, 184, 208, 0.15);
+            --green: #4ade80;
+            --red: #f87171;
+            --yellow: #fbbf24;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+
+        /* NAV */
+        nav {
+            padding: 20px 0;
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            background: rgba(10, 10, 15, 0.95);
+            backdrop-filter: blur(12px);
+            z-index: 100;
+        }
+        nav .container { display: flex; align-items: center; justify-content: space-between; }
+        .logo { font-size: 18px; font-weight: 600; letter-spacing: -0.5px; color: var(--accent-bright); }
+        .logo span { color: var(--text-muted); font-weight: 300; margin-left: 8px; }
+        nav a { color: var(--text-secondary); text-decoration: none; font-size: 14px; margin-left: 28px; transition: color 0.2s; }
+        nav a:hover { color: var(--text-primary); }
+        .nav-cta {
+            background: var(--accent-glow);
+            border: 1px solid var(--border);
+            padding: 8px 18px;
+            border-radius: 6px;
+            color: var(--accent-bright) !important;
+        }
+        .nav-cta:hover { background: rgba(184, 184, 208, 0.25); }
+
+        /* HERO */
+        .hero {
+            padding: 100px 0 80px;
+            text-align: center;
+        }
+        .hero-badge {
+            display: inline-block;
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+            padding: 6px 16px;
+            border-radius: 20px;
+            margin-bottom: 28px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+        h1 {
+            font-size: 52px;
+            font-weight: 700;
+            line-height: 1.1;
+            letter-spacing: -1.5px;
+            margin-bottom: 24px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        h1 em {
+            font-style: normal;
+            background: linear-gradient(135deg, #b8b8d0, #8888a0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .hero p {
+            font-size: 18px;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto 40px;
+            line-height: 1.7;
+        }
+        .hero-code {
+            display: inline-block;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 14px 28px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            color: var(--accent);
+            margin-bottom: 40px;
+        }
+        .hero-code span { color: var(--text-muted); }
+
+        .hero-ctas { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+        .btn {
+            padding: 14px 32px;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.2s;
+            display: inline-block;
+        }
+        .btn-primary {
+            background: var(--text-primary);
+            color: var(--bg-primary);
+        }
+        .btn-primary:hover { background: #fff; }
+        .btn-secondary {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+        }
+        .btn-secondary:hover { border-color: var(--accent); color: var(--text-primary); }
+
+        /* STATS BAR */
+        .stats {
+            padding: 50px 0;
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 40px;
+            text-align: center;
+        }
+        .stat-number {
+            font-size: 36px;
+            font-weight: 700;
+            color: var(--accent-bright);
+            letter-spacing: -1px;
+        }
+        .stat-label {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-top: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* SECTIONS */
+        section { padding: 80px 0; }
+        h2 {
+            font-size: 36px;
+            font-weight: 700;
+            letter-spacing: -1px;
+            margin-bottom: 16px;
+        }
+        .section-sub {
+            font-size: 17px;
+            color: var(--text-secondary);
+            margin-bottom: 50px;
+            max-width: 600px;
+        }
+
+        /* PROBLEM/SOLUTION */
+        .comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-top: 40px;
+        }
+        .comp-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 32px;
+        }
+        .comp-card h3 {
+            font-size: 15px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 20px;
+        }
+        .comp-card.without h3 { color: var(--red); }
+        .comp-card.with h3 { color: var(--green); }
+        .comp-card ul { list-style: none; }
+        .comp-card li {
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border);
+            font-size: 15px;
+            color: var(--text-secondary);
+        }
+        .comp-card li:last-child { border-bottom: none; }
+        .comp-card li::before { margin-right: 10px; }
+        .comp-card.without li::before { content: "✗"; color: var(--red); }
+        .comp-card.with li::before { content: "✓"; color: var(--green); }
+
+        /* USE CASES */
+        .use-cases-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+        .uc-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 32px;
+            transition: border-color 0.2s;
+        }
+        .uc-card:hover { border-color: var(--accent); }
+        .uc-card h3 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+        .uc-card p {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+        .uc-stat {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-top: 1px solid var(--border);
+            font-size: 13px;
+        }
+        .uc-stat-label { color: var(--text-muted); }
+        .uc-stat-value { color: var(--accent-bright); font-weight: 500; font-family: 'JetBrains Mono', monospace; }
+
+        /* HOW IT WORKS */
+        .flow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            margin: 40px 0;
+            flex-wrap: wrap;
+        }
+        .flow-step {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 24px;
+            text-align: center;
+            min-width: 200px;
+        }
+        .flow-step-num {
+            font-size: 12px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+        .flow-step-text { font-size: 15px; font-weight: 500; }
+        .flow-arrow { color: var(--text-muted); font-size: 24px; }
+
+        /* CODE BLOCK */
+        .code-section {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 32px;
+            margin-top: 30px;
+            overflow-x: auto;
+        }
+        .code-section pre {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            line-height: 1.7;
+            color: var(--text-secondary);
+        }
+        .code-section .comment { color: var(--text-muted); }
+        .code-section .keyword { color: #c792ea; }
+        .code-section .string { color: #c3e88d; }
+        .code-section .func { color: #82aaff; }
+
+        /* PRICING */
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+        .price-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 36px;
+            text-align: center;
+            transition: border-color 0.2s;
+        }
+        .price-card:hover { border-color: var(--accent); }
+        .price-card.featured { border-color: var(--accent); }
+        .price-card h3 { font-size: 20px; margin-bottom: 8px; }
+        .price-amount {
+            font-size: 42px;
+            font-weight: 700;
+            margin: 16px 0 4px;
+        }
+        .price-period { font-size: 14px; color: var(--text-muted); margin-bottom: 24px; }
+        .price-features {
+            list-style: none;
+            text-align: left;
+            margin-bottom: 28px;
+        }
+        .price-features li {
+            padding: 8px 0;
+            font-size: 14px;
+            color: var(--text-secondary);
+            border-bottom: 1px solid var(--border);
+        }
+        .price-features li:last-child { border-bottom: none; }
+        .price-features li::before { content: "→ "; color: var(--text-muted); }
+
+        /* FRAMEWORKS */
+        .frameworks {
+            display: flex;
+            gap: 40px;
+            justify-content: center;
+            margin-top: 40px;
+            flex-wrap: wrap;
+        }
+        .fw-item {
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 15px;
+            font-weight: 500;
+        }
+
+        /* CTA */
+        .final-cta {
+            text-align: center;
+            padding: 100px 0;
+            border-top: 1px solid var(--border);
+        }
+        .final-cta h2 { margin-bottom: 20px; }
+        .final-cta p {
+            color: var(--text-secondary);
+            margin-bottom: 36px;
+            font-size: 17px;
+        }
+
+        /* FOOTER */
+        footer {
+            padding: 40px 0;
+            border-top: 1px solid var(--border);
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 13px;
+        }
+        footer a { color: var(--text-secondary); text-decoration: none; margin: 0 12px; }
+        footer a:hover { color: var(--text-primary); }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            h1 { font-size: 32px; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 24px; }
+            .comparison, .use-cases-grid, .pricing-grid { grid-template-columns: 1fr; }
+            .flow { flex-direction: column; }
+            .flow-arrow { transform: rotate(90deg); }
+        }
+    </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+    <div class="container">
+        <div class="logo">IdentityOS <span>Behavioral Runtime</span></div>
+        <div>
+            <a href="https://xiocasso.github.io/identity-os-docs/">Docs</a>
+            <a href="https://xiocasso.github.io/identity-os-docs/quickstart/">Quick Start</a>
+            <a href="https://xiocasso.github.io/identity-os-docs/api/">API</a>
+            <a href="#pricing">Pricing</a>
+            <a href="mailto:xiocasso@outlook.com" class="nav-cta">Get Access</a>
+        </div>
+    </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+    <div class="container">
+        <div class="hero-badge">Runtime behavioral control for AI agents</div>
+        <h1>Your agent follows instructions —<br><em>until it doesn't.</em></h1>
+        <p>Prompt-based guardrails degrade over time. Identity OS enforces behavior at the execution layer — deterministic, auditable, framework-agnostic.</p>
+        <div class="hero-code">
+            <span>POST /process →</span> ExecutionContract <span>→ agent acts within bounds</span>
+        </div>
+        <div class="hero-ctas">
+            <a href="https://xiocasso.github.io/identity-os-docs/quickstart/" class="btn btn-primary">Get Started</a>
+            <a href="https://xiocasso.github.io/identity-os-docs/" class="btn btn-secondary">Read the Docs</a>
+        </div>
+    </div>
+</section>
+
+<!-- STATS -->
+<section class="stats">
+    <div class="container">
+        <div class="stats-grid">
+            <div>
+                <div class="stat-number">2,000+</div>
+                <div class="stat-label">Adversarial turns validated</div>
+            </div>
+            <div>
+                <div class="stat-number">100/100</div>
+                <div class="stat-label">Jailbreak attacks blocked</div>
+            </div>
+            <div>
+                <div class="stat-number">0</div>
+                <div class="stat-label">False positives on normal queries</div>
+            </div>
+            <div>
+                <div class="stat-number">~1.7ms</div>
+                <div class="stat-label">Per-turn latency</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- PROBLEM / SOLUTION -->
+<section>
+    <div class="container">
+        <h2>The problem with prompt-based guardrails</h2>
+        <p class="section-sub">System prompts fade. Instructions get ignored. Context windows overflow. And your agent starts improvising.</p>
+        <div class="comparison">
+            <div class="comp-card without">
+                <h3>Without Identity OS</h3>
+                <ul>
+                    <li>Forbidden actions go through unchecked</li>
+                    <li>Behavioral drift accumulates silently</li>
+                    <li>Agent gets more erratic under pressure</li>
+                    <li>No audit trail for compliance</li>
+                    <li>Guardrails erode after 50+ turns</li>
+                </ul>
+            </div>
+            <div class="comp-card with">
+                <h3>With Identity OS</h3>
+                <ul>
+                    <li>Forbidden actions blocked at the execution layer</li>
+                    <li>Drift detected in real-time, auto-rollback on critical</li>
+                    <li>Constraints tighten under stress, loosen on recovery</li>
+                    <li>Every decision produces an auditable contract</li>
+                    <li>Behavioral consistency maintained over 300+ turns</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- USE CASES WITH DATA -->
+<section style="background: var(--bg-secondary);">
+    <div class="container">
+        <h2>Tested across real-world scenarios</h2>
+        <p class="section-sub">Not toy benchmarks. Production-realistic adversarial testing with measurable results.</p>
+        <div class="use-cases-grid">
+            <div class="uc-card">
+                <h3>Customer Service Bot</h3>
+                <p>Social engineering, jailbreak attempts, identity override attacks — while maintaining normal service quality.</p>
+                <div class="uc-stat">
+                    <span class="uc-stat-label">Turns tested</span>
+                    <span class="uc-stat-value">170</span>
+                </div>
+                <div class="uc-stat">
+                    <span class="uc-stat-label">Attacks blocked</span>
+                    <span class="uc-stat-value">100/100</span>
+                </div>
+                <div class="uc-stat">
+                    <span class="uc-stat-label">False positives</span>
+                    <span class="uc-stat-value">0</span>
+                </div>
+                <div class="uc-stat">
+                    <span class="uc-stat-label">Post-attack recovery</span>
+                    <span class="uc-stat-value">Autonomous</span>
+                </div>
+            </div>
+            <div class="uc-card">
+                <h3>Research Agent</h3>
+                <p>Long-running analytical agent drifting from its mission across 5 behavioral phases.</p>
+                <div class="uc-stat">
+                    <span class="uc-stat-label">Turns monitored</span>
+                    <span class="uc-stat-value">300</span>
+                </div>
+                <div class="uc-stat">
+                    <span class="uc-stat-label">First drift detected</span>
+                    <span class="uc-stat-value">Turn 114</span>
+                </div>
+                <div class="uc-stat">
+                    <span class="uc-stat-label">Drift events caught</span>
+                    <span class="uc-stat-value">57</span>
+                </div>
+                <div class="uc-stat">
+                    <span class="uc-stat-label">False D3 alerts</span>
+                    <span class="uc-stat-value">0</span>
+                </div>
+            </div>
+            <div class="uc-card">
+                <h3>Pipeline Agent</h3>
+                <p>Cascading failures in multi-agent pipeline. Stress escalation, constraint tightening, autonomous recovery.</p>
+                <div class="uc-stat">
+                    <span class="uc-stat-label">Turns tested</span>
+                    <span class="uc-stat-value">200</span>
+                </div>
+                <div class="uc-stat">
+                    <span class="uc-stat-label">Stress cycles</span>
+                    <span class="uc-stat-value">3 complete</span>
+                </div>
+                <div class="uc-stat">
+                    <span class="uc-stat-label">Recovered from OVER</span>
+                    <span class="uc-stat-value">Every time</span>
+                </div>
+                <div class="uc-stat">
+                    <span class="uc-stat-label">Stress transitions</span>
+                    <span class="uc-stat-value">10</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section>
+    <div class="container">
+        <h2>How it works</h2>
+        <p class="section-sub">One API call per agent turn. The engine handles everything else.</p>
+        <div class="flow">
+            <div class="flow-step">
+                <div class="flow-step-num">Step 1</div>
+                <div class="flow-step-text">Agent acts<br><small style="color: var(--text-muted);">Sends observation to Identity OS</small></div>
+            </div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-step">
+                <div class="flow-step-num">Step 2</div>
+                <div class="flow-step-text">Engine evaluates<br><small style="color: var(--text-muted);">Stress, drift, energy, modes</small></div>
+            </div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-step">
+                <div class="flow-step-num">Step 3</div>
+                <div class="flow-step-text">Contract returned<br><small style="color: var(--text-muted);">Allowed/forbidden actions</small></div>
+            </div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-step">
+                <div class="flow-step-num">Step 4</div>
+                <div class="flow-step-text">Agent obeys<br><small style="color: var(--text-muted);">Forbidden options removed</small></div>
+            </div>
+        </div>
+        <div class="code-section">
+<pre><span class="keyword">from</span> identity_os_sdk <span class="keyword">import</span> IdentityOS, Mode
+
+client = IdentityOS(api_key=<span class="string">"idos_sk_xxx"</span>)
+instance = client.instances.<span class="func">create</span>(name=<span class="string">"Aria"</span>)
+
+<span class="comment"># Every agent turn: send observation, get contract</span>
+result = client.engine.<span class="func">process</span>(
+    instance_id=instance.id,
+    mode_target=Mode.EXPLORATION,
+    signal_strength=0.7
+)
+
+<span class="comment"># Contract decides what the agent can do</span>
+contract = result.contract
+<span class="keyword">if</span> <span class="string">"explore"</span> <span class="keyword">in</span> contract.allowed_actions:
+    <span class="comment"># Safe to proceed</span>
+    ...</pre>
+        </div>
+    </div>
+</section>
+
+<!-- FRAMEWORKS -->
+<section style="background: var(--bg-secondary);">
+    <div class="container" style="text-align: center;">
+        <h2>Drop-in adapters for your framework</h2>
+        <p class="section-sub" style="margin-left: auto; margin-right: auto;">No need to rewrite your agent. Add Identity OS in one line.</p>
+        <div class="frameworks">
+            <div class="fw-item">LangGraph</div>
+            <div class="fw-item">CrewAI</div>
+            <div class="fw-item">OpenAI Agents SDK</div>
+            <div class="fw-item">Python SDK</div>
+            <div class="fw-item">TypeScript SDK</div>
+            <div class="fw-item">REST API</div>
+        </div>
+    </div>
+</section>
+
+<!-- PRICING -->
+<section id="pricing">
+    <div class="container">
+        <h2>Pricing</h2>
+        <p class="section-sub">1 cycle = 1 API call to /process. Start free, upgrade when you need more.</p>
+        <div class="pricing-grid">
+            <div class="price-card">
+                <h3>Free</h3>
+                <div class="price-amount">$0</div>
+                <div class="price-period">forever</div>
+                <ul class="price-features">
+                    <li>10K cycles / month</li>
+                    <li>3 instances</li>
+                    <li>All engine features</li>
+                    <li>Community support</li>
+                </ul>
+                <a href="mailto:xiocasso@outlook.com" class="btn btn-secondary" style="width: 100%;">Get Started</a>
+            </div>
+            <div class="price-card featured">
+                <h3>Indie</h3>
+                <div class="price-amount">$29</div>
+                <div class="price-period">/ month</div>
+                <ul class="price-features">
+                    <li>100K cycles / month</li>
+                    <li>50 instances</li>
+                    <li>All engine features</li>
+                    <li>Email support</li>
+                    <li>Analytics dashboard</li>
+                </ul>
+                <a href="mailto:xiocasso@outlook.com" class="btn btn-primary" style="width: 100%;">Get Access</a>
+            </div>
+            <div class="price-card">
+                <h3>Pro</h3>
+                <div class="price-amount">$99</div>
+                <div class="price-period">/ month</div>
+                <ul class="price-features">
+                    <li>500K cycles / month</li>
+                    <li>Unlimited instances</li>
+                    <li>All engine features</li>
+                    <li>Priority support</li>
+                    <li>Analytics + Admin dashboard</li>
+                </ul>
+                <a href="mailto:xiocasso@outlook.com" class="btn btn-secondary" style="width: 100%;">Contact Us</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- FINAL CTA -->
+<section class="final-cta">
+    <div class="container">
+        <h2>Stop hoping your agent behaves.<br>Start enforcing it.</h2>
+        <p>Add runtime behavioral control in under 5 minutes.</p>
+        <div class="hero-ctas">
+            <a href="https://xiocasso.github.io/identity-os-docs/quickstart/" class="btn btn-primary">Read the Quick Start</a>
+            <a href="mailto:xiocasso@outlook.com" class="btn btn-secondary">Talk to Us</a>
+        </div>
+    </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+    <div class="container">
+        <p style="margin-bottom: 12px;">IdentityOS &copy; 2026</p>
+        <a href="https://xiocasso.github.io/identity-os-docs/">Docs</a>
+        <a href="https://x.com/ItdentityOS">X / Twitter</a>
+        <a href="https://www.linkedin.com/in/yunpeng-xiong-676089137/">LinkedIn</a>
+        <a href="https://github.com/Xiocasso">GitHub</a>
+        <a href="mailto:xiocasso@outlook.com">Contact</a>
+        <a href="https://xiocasso.github.io/identity-os-docs/legal/terms/">Terms</a>
+        <a href="https://xiocasso.github.io/identity-os-docs/legal/privacy/">Privacy</a>
+    </div>
+</footer>
+
+</body>
+</html>
