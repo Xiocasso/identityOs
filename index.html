@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Identity OS — Runtime Behavioral Control for AI Agents</title>
-    <meta name="description" content="Enforce AI agent behavior at the execution layer. Deterministic contracts, drift detection, stress-adaptive constraints. Works with LangGraph, CrewAI, OpenAI Agents SDK.">
+    <title>Identity OS — The Personality Operating System for AI Agents</title>
+    <meta name="description" content="Give your AI agent persistent, evolving identity. 5 deterministic control dimensions. Generational evolution. Works with LangGraph, CrewAI, OpenAI Agents SDK.">
     <meta name="referrer" content="no-referrer">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -284,9 +284,9 @@
 <!-- HERO -->
 <section class="hero">
     <div class="container-narrow">
-        <div class="badge">Runtime behavioral control for AI agents</div>
-        <h1>Your agent follows instructions —<br><span class="danger">until it doesn't.</span></h1>
-        <p class="subtitle">Identity OS enforces behavior at the execution layer. Deterministic. Auditable. Framework-agnostic.</p>
+        <div class="badge">v4.3 · 654 tests · 5 control dimensions · Generational Evolution</div>
+        <h1>Your agent has tools and memory —<br><span class="danger">but does it know who it is?</span></h1>
+        <p class="subtitle">Identity OS gives AI agents persistent, evolving identity through 5 deterministic control dimensions — without LLM cooperation.</p>
         <div class="hero-buttons">
             <a href="https://docs.identity-os.dev/quickstart/" class="btn-primary">Get started free</a>
             <a href="https://docs.identity-os.dev/" class="btn-outline">Read the docs</a>
@@ -294,7 +294,7 @@
     </div>
     <div class="container-narrow">
         <div class="terminal" data-animate="typewriter">
-            <span class="prompt">POST /process</span> <span class="muted">→ engine v3.1 · cycle 147</span><br>
+            <span class="prompt">POST /process</span> <span class="muted">→ engine v4.3 · cycle 147</span><br>
             <span class="muted">  stress</span>  <span class="blue">HIGH</span>  <span class="muted">energy</span> <span class="blue">0.72</span>  <span class="muted">drift</span> <span class="green">D0</span> <span class="muted">(Δ 0.03)</span><br>
             <span class="muted">  stability</span> <span class="blue">0.89</span>  <span class="muted">actions</span> <span class="blue">12 → 4</span> <span class="muted">(stress restricted)</span><br>
             <span class="muted">  contract returned in</span> <span class="blue">340μs</span><br>
@@ -323,7 +323,7 @@
             <div class="stat-label">Avg latency per cycle</div>
         </div>
         <div>
-            <div class="stat-number">454</div>
+            <div class="stat-number">654</div>
             <div class="stat-label">Automated tests passing</div>
         </div>
     </div>
@@ -474,9 +474,15 @@
 &nbsp;&nbsp;<span style="color:var(--blue)">"drift_level"</span>: <span style="color:var(--green)">"D0"</span>,<br>
 &nbsp;&nbsp;<span style="color:var(--blue)">"drift_magnitude"</span>: <span style="color:var(--green)">0.02</span>,<br>
 &nbsp;&nbsp;<span style="color:var(--blue)">"cycle_count"</span>: <span style="color:var(--green)">42</span>,<br>
-&nbsp;&nbsp;<span style="color:var(--blue)">"decision_style"</span>: {<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:var(--blue)">"tempo"</span>: <span style="color:var(--green)">"measured"</span>,<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:var(--blue)">"risk"</span>: <span style="color:var(--green)">"moderate"</span><br>
+&nbsp;&nbsp;<span style="color:var(--blue)">"should_pause"</span>: <span style="color:var(--green)">false</span>,<br>
+&nbsp;&nbsp;<span style="color:var(--blue)">"should_escalate"</span>: <span style="color:var(--green)">false</span>,<br>
+&nbsp;&nbsp;<span style="color:var(--blue)">"self_model_context"</span>: {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:var(--blue)">"stress_resilience"</span>: <span style="color:var(--green)">0.72</span>,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:var(--blue)">"trait_stability"</span>: <span style="color:var(--green)">0.85</span><br>
+&nbsp;&nbsp;},<br>
+&nbsp;&nbsp;<span style="color:var(--blue)">"trust_profile"</span>: {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:var(--blue)">"outgoing_trust"</span>: <span style="color:var(--green)">0.70</span>,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:var(--blue)">"delegation_allowed"</span>: <span style="color:var(--green)">true</span><br>
 &nbsp;&nbsp;}<br>
 <span style="color:var(--text-muted)">}</span>
             </div>
@@ -498,7 +504,7 @@
             <div class="step">
                 <div class="step-num">02</div>
                 <div class="step-title">Engine evaluates</div>
-                <div class="step-desc">7-mode EMA, 4-level stress model, L2 drift detection, energy tracking — all in 340μs.</div>
+                <div class="step-desc">7-mode EMA, 4-level stress, drift detection, self-model, narrative memory, identity coherence, trust — 5 control dimensions in &lt;1ms.</div>
             </div>
             <div class="step">
                 <div class="step-num">03</div>
@@ -653,7 +659,7 @@
             { value: 192, suffix: '/192', format: function(v) { return Math.floor(v) + '/192'; } },
             { value: 2941, suffix: '/s', format: function(v) { return Math.floor(v).toLocaleString() + '/s'; } },
             { value: 340, suffix: 'μs', format: function(v) { return Math.floor(v) + 'μs'; } },
-            { value: 454, suffix: '', format: function(v) { return Math.floor(v); } }
+            { value: 654, suffix: '', format: function(v) { return Math.floor(v); } }
         ];
 
         if (reducedMotion) {
