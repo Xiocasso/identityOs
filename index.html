@@ -282,27 +282,56 @@
 </nav>
 
 <!-- HERO -->
-<section class="hero">
-    <div class="container-narrow">
-        <div class="badge">v4.3 · 654 tests · 5 control dimensions · Generational Evolution</div>
-        <h1>Your agent has tools and memory —<br><span class="danger">but does it know who it is?</span></h1>
-        <p class="subtitle">Identity OS gives AI agents persistent, evolving identity through 5 deterministic control dimensions — without LLM cooperation.</p>
-        <div class="hero-buttons">
-            <a href="https://docs.identity-os.dev/quickstart/" class="btn-primary">Get started free</a>
-            <a href="https://docs.identity-os.dev/" class="btn-outline">Read the docs</a>
+<section class="hero" style="padding: 60px 0 40px;">
+    <div class="container" style="display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center;">
+        <!-- LEFT: Value prop -->
+        <div>
+            <div class="badge">v4.3 · 666 tests · 5 control dimensions</div>
+            <h1 style="font-size: 36px;">Runtime behavioral control<br>for AI agents.</h1>
+            <p class="subtitle" style="max-width: 100%; margin-left: 0; text-align: left;">Enforce what your agent can do — at execution time. Not prompts. Not guardrails. <strong>Deterministic.</strong></p>
+            <div class="hero-buttons" style="justify-content: flex-start;">
+                <a href="https://docs.identity-os.dev/quickstart/" class="btn-primary">Start building</a>
+                <a href="https://docs.identity-os.dev/" class="btn-outline">Read the docs</a>
+            </div>
+            <div style="margin-top: 20px; display: flex; gap: 16px; font-size: 11px; color: var(--text-muted);">
+                <span style="border: 1px solid var(--border); border-radius: 12px; padding: 3px 10px;">Deterministic</span>
+                <span style="border: 1px solid var(--border); border-radius: 12px; padding: 3px 10px;">Runtime-enforced</span>
+                <span style="border: 1px solid var(--border); border-radius: 12px; padding: 3px 10px;">Framework-agnostic</span>
+            </div>
         </div>
-    </div>
-    <div class="container-narrow">
-        <div class="terminal" data-animate="typewriter">
-            <span class="prompt">POST /process</span> <span class="muted">→ engine v4.3 · cycle 147</span><br>
-            <span class="muted">  stress</span>  <span class="blue">HIGH</span>  <span class="muted">energy</span> <span class="blue">0.72</span>  <span class="muted">drift</span> <span class="green">D0</span> <span class="muted">(Δ 0.03)</span><br>
-            <span class="muted">  stability</span> <span class="blue">0.89</span>  <span class="muted">actions</span> <span class="blue">12 → 4</span> <span class="muted">(stress restricted)</span><br>
-            <span class="muted">  contract returned in</span> <span class="blue">340μs</span><br>
-            <br>
-            <span class="green">  ✓ allowed</span>   stabilize, clarify, defer, withdraw<br>
-            <span class="red">  ✗ blocked</span>   execute, challenge, explore, pivot + 4 forbidden<br>
-            <br>
-            <span class="prompt">$</span> <span class="cursor"></span>
+        <!-- RIGHT: Visual ExecutionContract -->
+        <div style="background: var(--bg-terminal); border: 1px solid var(--border); border-radius: 12px; padding: 24px; font-family: 'JetBrains Mono', monospace; font-size: 12px; line-height: 1.8;">
+            <div style="font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 12px;">ExecutionContract · cycle 147</div>
+            <div style="display: flex; gap: 16px; margin-bottom: 16px;">
+                <div style="background: rgba(248,81,73,0.1); border: 1px solid rgba(248,81,73,0.3); border-radius: 6px; padding: 6px 12px; text-align: center;">
+                    <div style="font-size: 10px; color: var(--red);">STRESS</div>
+                    <div style="font-size: 16px; font-weight: 600; color: var(--red);">HIGH</div>
+                </div>
+                <div style="background: rgba(88,166,255,0.1); border: 1px solid rgba(88,166,255,0.3); border-radius: 6px; padding: 6px 12px; text-align: center;">
+                    <div style="font-size: 10px; color: var(--blue);">ENERGY</div>
+                    <div style="font-size: 16px; font-weight: 600; color: var(--blue);">0.72</div>
+                </div>
+                <div style="background: rgba(63,185,80,0.1); border: 1px solid rgba(63,185,80,0.3); border-radius: 6px; padding: 6px 12px; text-align: center;">
+                    <div style="font-size: 10px; color: var(--green);">DRIFT</div>
+                    <div style="font-size: 16px; font-weight: 600; color: var(--green);">D0</div>
+                </div>
+            </div>
+            <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 6px;">ACTIONS: 12 → <strong style="color: var(--blue);">4</strong> (stress restricted)</div>
+            <div style="margin-bottom: 8px;">
+                <span style="color: var(--green);">✓</span> <span style="color: var(--green); font-size: 11px;">stabilize</span>
+                <span style="color: var(--green); margin-left: 8px;">✓</span> <span style="color: var(--green); font-size: 11px;">clarify</span>
+                <span style="color: var(--green); margin-left: 8px;">✓</span> <span style="color: var(--green); font-size: 11px;">defer</span>
+                <span style="color: var(--green); margin-left: 8px;">✓</span> <span style="color: var(--green); font-size: 11px;">withdraw</span>
+            </div>
+            <div style="margin-bottom: 12px;">
+                <span style="color: var(--red);">✗</span> <span style="color: var(--red); font-size: 11px; opacity: 0.6;">execute</span>
+                <span style="color: var(--red); margin-left: 8px;">✗</span> <span style="color: var(--red); font-size: 11px; opacity: 0.6;">challenge</span>
+                <span style="color: var(--red); margin-left: 8px;">✗</span> <span style="color: var(--red); font-size: 11px; opacity: 0.6;">explore</span>
+                <span style="color: var(--red); margin-left: 8px;">✗</span> <span style="color: var(--red); font-size: 11px; opacity: 0.6;">pivot</span>
+            </div>
+            <div style="border-top: 1px solid var(--border); padding-top: 10px; font-size: 10px; color: var(--text-muted);">
+                should_pause: false · trust: 0.70 · resilience: 0.72 · <span style="color: var(--blue);">340μs</span>
+            </div>
         </div>
     </div>
 </section>
@@ -323,11 +352,33 @@
             <div class="stat-label">Avg latency per cycle</div>
         </div>
         <div>
-            <div class="stat-number">654</div>
+            <div class="stat-number">666</div>
             <div class="stat-label">Automated tests passing</div>
         </div>
     </div>
 </div>
+
+<!-- USE CASES -->
+<section class="section" data-animate="reveal">
+    <div class="container">
+        <div class="section-label">Who needs this</div>
+        <div class="section-title">When your agent's behavior is a liability, not a feature.</div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-top: 24px;">
+            <div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; padding: 24px;">
+                <div style="font-size: 13px; font-weight: 600; margin-bottom: 8px;">Customer Service Agents</div>
+                <div style="font-size: 12px; color: var(--text-muted); line-height: 1.6;">After 50 turns, your support bot starts improvising. Identity OS keeps it in character — risky actions blocked, tone consistent, escalation automatic.</div>
+            </div>
+            <div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; padding: 24px;">
+                <div style="font-size: 13px; font-weight: 600; margin-bottom: 8px;">Autonomous Research Agents</div>
+                <div style="font-size: 12px; color: var(--text-muted); line-height: 1.6;">Your agent runs overnight and goes off-track. Drift detection catches behavioral deviation. D3-level corruption triggers auto-rollback.</div>
+            </div>
+            <div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; padding: 24px;">
+                <div style="font-size: 13px; font-weight: 600; margin-bottom: 8px;">Multi-Agent Workflows</div>
+                <div style="font-size: 12px; color: var(--text-muted); line-height: 1.6;">One stressed agent cascades failure to others. Trust scoring limits delegation. Timing control pauses overwhelmed agents before damage spreads.</div>
+            </div>
+        </div>
+    </div>
+</section>
 
 <!-- LIVE DEMO -->
 <section class="section" data-animate="reveal">
@@ -659,7 +710,7 @@
             { value: 192, suffix: '/192', format: function(v) { return Math.floor(v) + '/192'; } },
             { value: 2941, suffix: '/s', format: function(v) { return Math.floor(v).toLocaleString() + '/s'; } },
             { value: 340, suffix: 'μs', format: function(v) { return Math.floor(v) + 'μs'; } },
-            { value: 654, suffix: '', format: function(v) { return Math.floor(v); } }
+            { value: 666, suffix: '', format: function(v) { return Math.floor(v); } }
         ];
 
         if (reducedMotion) {
